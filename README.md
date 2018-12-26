@@ -1,59 +1,43 @@
-# react wireframer
+# compounded component library
+Main Principles:
 
-build wireframes with your react components!
+## Separation of concerns:
 
-[Demo](http://react-wireframer.surge.sh)
+  * Base-Components that only describe functionality.
+      * No JSX allowed
+      * No platform specific API’s allowed (<- this will be a challenge for components that work with the DOM to do their thing)
+      * Reason = should be useable for react-native as well as react-dom, react-sketch, etc.
+  * Components that implement these base-components, with any style you’d like (material, ant, own,…) (name TBD, let’s call them final-components for now)
+      * Purely dumb components.
+      * Don’t need to be functional (e.g. local UI state is sometimes necessary for a dropdown or the like, but see below)
+## Whenever internal state is used, provide a state-reducer prop
+  * This is analogous to a reducer in redux: it takes state and an action, and returns more state
+  * This way, users can intercept the state change done by the internal component, and do something else with it — creating super-customisable component functionality
+  * For an example, see https://github.com/paypal/downshift#statereducer (could be that we actually use downshift or some variation of it, for our dropdown. It’s MIT licensed, so we can )
+## Render props everywhere (with compound components pattern)
+  * Because of the Separation of Concerns principle, a base-component is not concerned with how something will be rendered, or even what will be rendered
+  * It always exposes it’s internal API via a context provider. For detailed information, see https://blog.logrocket.com/guide-to-react-compound-components-9c4b3eb482e9
+  * Final-components will consume that internal API, and do with it whatever it pleases.
+  * This is the key part that makes it possible to write your own custom implementation based on all the base-components
+      * Final-components can then decide on their markup entirely. Order, styling, elements,… everything is customisable.
+## Utilities for layout
+  * Padding, margin
+  * ...Are all utilities. A component can never implement margin or padding directly.
+  * The library component COULD implement padding, but only through these utitlies
+  * Reasons:
+      * with utilities, using a fixed scale is enforced, and re-scaling (e.g. enlarged mode) becomes trivial
+      * Components are always isolated. Padding/margin is part of context
+  * For layout inside a component, we can use CSS grid abstraction
+      * ONLY if necessary inside a component. TBD if it can be avoided
+      * Users need to be able to customise the placement of sub components. (Can do with a prop, if you use grid)
+      * We should be able to achieve this in the DOM with CSS grid.
+      * But we need an abstraction layer, because for Native it could be a different rendering system that takes care of it (probably Flex ?)
+## Use composition for extending functionality
+  * The base-components must be as simple as possible. The bare minimum that is necessary to call the component what it is. (e.g. a table base component does not implement sorting, pagination, checkboxes,…. Only cares about rendering rows, header, cells.)
+  * Extending functionality should be done by writing a HOC for the base-component
+## Use constants for everything
+  * Colors, scales, … should always come from a constant.
+  * This way, theming (and theme switching) is super easy, sass style.
+## Final components care about accessibility
 
-`npm i react-wireframer`
 
-
-To have all props available for editing live (in development), make sure your components have propTypes defined. All defined proptypes will be exposed when clicking on the component in the app.
-
-Try dragging & dropping.
-
-Try cmd + z for undo.
-
-Try alt + drag for copy.
-## how to use it
-Make sure to call `createLayouter` with an instance of prop-types installed from our own fork. It provides some extra magic in development mode, that extract all the possible types of props (yes, even enums for dropdowns!).
-
-
-You can install this prop-types fork by putting the following in your package.json file:
-
-`"prop-types": "git+https://github.com/ambewas/prop-types.git",`
-```js
-
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-
-import Row from "./components/row";
-import Button from "./components/button";
-import ClassComponent from "./components/class";
-
-import {createLayouter} from "react-wireframer";
-
-const Layouter = createLayouter(PropTypes);
-
-class Main extends Component { // eslint-disable-line
-	constructor() {
-		super();
-		this.state = {
-			hierarchy: [/* some default hierarchy*/],
-		};
-	}
-	render() {
-		return (
-			<Layouter
-				hierarchy={this.state.hierarchy}
-				onChange={hierarchy => {
-					this.setState({ hierarchy });
-				}}
-				components={{ Button, Row, ClassComponent }}
-			/>
-		);
-	}
-}
-
-export default Main;
-
-```
