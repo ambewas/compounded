@@ -2,6 +2,7 @@
 
 ## Raison d'être
 ### Compounded is built to make developing a custom component library easy
+TODO: this section needs to be fleshed out a bit.
 problems:
 - developing a custom component library based on atomic design is **hard**.
 - using an existing library such as material-ui is enticing, and even theming them is doable to some degree - but most often UX considerations require you to have control over markup, as well as styling. Something that's very hard, or impossible to do with most theming systems out there
@@ -25,12 +26,16 @@ With the basic philosophy out of our way, and what Compounded will look like, in
 
 You can read through these principles in more detail on our [github repo](CONTRIBUTING.MD).
 
-In this article, though, I want to touch on the most important principle Compunded is build around:
+In this article, though, I want to touch on the most important principle Compunded is built around.
 
 
 ### Separation of concerns
+
 The first, and most principle of Compounded is a strict separation between Core-components that **only** describe functionality, and Compounds, that **only** care about rendering.
 
+OK, we've all heard that one before. But with Compounded and the patterns it employs, we  believe it's very doable, and actually pretty simple if you think about it. It's using one of those architectural patterns that just *click* when you first learn about it.
+
+In one breath, Compounded embraces the, well, [compound-components pattern](link).
 
 In a Core-component, you'll find that there is no *real* rendering going on. The only thing it returns is a context provider.
 
