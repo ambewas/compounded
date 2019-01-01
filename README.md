@@ -29,21 +29,35 @@ You can read through these principles in more detail on our [github repo](CONTRI
 In this article, though, I want to touch on the most important principle Compunded is built around.
 
 
-### Separation of concerns
+### Good old separation of concerns
 
-The first, and most principle of Compounded is a strict separation between Core-components that **only** describe functionality, and Compounds, that **only** care about rendering.
+The first, and most principle of Compounded is a strict separation between what we call Core-components, that **only** describe functionality, and Compounds, that **only** care about rendering.
 
-OK, we've all heard that one before. But with Compounded and the patterns it employs, we  believe it's very doable, and actually pretty simple if you think about it. It's using one of those architectural patterns that just *click* when you first learn about it.
+OK, we've all heard that one before. If you've been working in the field of software development for a while, and web development specifically, you might be thinking to yourself that we're about to go full circle again. And indeed you would not be too far off: this separation of concerns does look kinda like good-old MVC - except with Compounded, we're implementing it **at the component level**.
+
+OK, let's dig a little bit deeper in what we mean by that.
+
+Compounded does the separation of concerns thing by employing one of those architectural patterns that just absolutely *click* when you first learn about it. Something that kind of reminded me of the first days of using react in the first place. The same feeling after finding out about redux:
+
+TODO: quote:
+"This is so simple and obvious - why haven't I allways written my components like this"
 
 In one breath, Compounded embraces the, well, [compound-components pattern](link).
 
-In a Core-component, you'll find that there is no *real* rendering going on. The only thing it returns is a context provider.
+I encourage you to read through that article to learn about it in detail if you don't already know about how compounded-components work.
+
+For our purposes, though, let's look at how Compounded leverages the benefits of this pattern, to create a truly universal base for developing custom atomic-design component libraries.
+
+First up: the Core Component.
+
+In a Core-component, you'll find that there is no *real* rendering going on. The only thing it returns is a context provider, the only thing it actually cares about are state, state updates, helper functions (e.g. sorting data), and subscriptions.
+
 
 ```js
 CODE example here
 ```
 
-No platform specific APIs are allowed, which ensures a Core-Component can be written to be **platform agnostic** (i.e. they can be use ase a core for react-native implementations of Compounds, as well as for DOM implementations of Compounds)
+No platform specific APIs are allowed, which ensures a Core-Component can be written to be **platform agnostic** (i.e. they can be use ase a core for react-native implementations of Compounds, as well as for DOM implementations of Compounds. More details on this in the advantages section).
 
 
 A Compound, then, consumes the API exposed by a Core-component:
@@ -57,6 +71,7 @@ Compounds **are** platform aware, as they care about how something is rendered. 
 
 When working with Compounded to convert the atomic design system from your UX/UI team into actual react components, you will mostly be concerned with writing custom Compounds, using Core-components.
 
+TODO: this should probably come later in the article, about how other component styled libraries may leverage the powers of Compounded to build their own implementations.
 It should be noted, however, that writing your own custom Compounds is not necessary to get started with Compounded. We [are working on](link_to_repo) implementations of material-design, and other popular design frameworks in a themed Compound library, to get started quickly.
 
 Your custom developed Compounds (or those from our premade themes) will eventually be very easy to use for everyone in your theme:
@@ -66,22 +81,16 @@ Your custom developed Compounds (or those from our premade themes) will eventual
 CODE example here
 ```
 
-
-
-Now, if you've been working in the field of software development for a while, and web development specifically, you might be thinking to yourself that we've gone full circle again. And indeed you would not be too far off: this separation of concerns does look kinda like good-old MVC - but here it's implemented at the component level.
-
-The use of the compound components pattern (TODO: popularised by who? can we namedrop?), enables us to be **very flexible** with the decoupling of view-controller. We can nest things, compose things, move things around like it's nobody's business.
-
+The use of the compound components pattern enables us to be **very flexible** with the decoupling of view-controller. We can nest things, compose things, move things around like it's nobody's business.
 
 // TODO: is it clear enough here what we are doing etc?
 
 ### the different components of Compounded
-So, from that main principle follows that every Compounded component should be made up of a couple of different elements working together.
+So, from that main principle follows that every Compounded component should be made up of a couple of different elements working together. And you've already got a little taste of what's possible in the previous section.
 
 It can be somewhat confusing to wrap your head around, though, so let's work through a very specific example here and see how the classic problem of developing a really good (and accessible) custom dropdown component becomes trivial by using Compounded:
 
 Let's look at the code for our own material-design themed Dropdown Compound.
-
 
 
 ```js
@@ -89,8 +98,6 @@ CODE example here
 ```
 If we break it down, we can see that it is made up out of... TODO: complete
 TODO: also put in how it's easy to add in custom logic as well!
-
-
 
 
 Let's recap what we have learned so far. This is an overview of the different elements the Compounded library exposes, specifically in the context of a dropdown component:
